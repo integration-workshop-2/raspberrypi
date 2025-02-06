@@ -11,4 +11,4 @@ app.register_blueprint(blueprint=vital_signs_sensors_bp, url_prefix="/api")
 
 
 if __name__ == "__main__":
-    app.run(host="10.42.0.3", port=6000)
+    app.run(host="10.42.0.3", port=5000)
