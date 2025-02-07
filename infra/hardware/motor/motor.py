@@ -36,7 +36,7 @@ class Motor:
         control_pins_by_cylinder_number_dict = {
             1: [6, 13, 19, 26],
             2: [18, 23, 24, 25],
-            3: [12, 16, 20, 21],
+            3: [21, 20, 16, 12],
         }
 
         return control_pins_by_cylinder_number_dict.get(cylinder_number)

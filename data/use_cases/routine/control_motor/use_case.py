@@ -10,14 +10,17 @@ class ControlMotorUseCase:
         self.__tcrt5000b = TCRT5000(sensor_pin=17)
 
     def execute(self) -> None:
-        for _ in range(512):
-            if self.__tcrt5000a.detected or self.__tcrt5000b.detected:
-                return
+        stop = False
 
-            for i in range(8):
-                for j in range(4):
-                    self.__motor.set_pin_state(
-                        pin=self.__motor.get_control_pins()[j],
-                        state=self.__motor.get_half_step_sequence()[i][j],
-                    )
-                sleep(0.001)
+        while not stop:
+            for _ in range(512):
+                if self.__tcrt5000a.detected or self.__tcrt5000b.detected:
+                    stop = True
+
+                for i in range(8):
+                    for j in range(4):
+                        self.__motor.set_pin_state(
+                            pin=self.__motor.get_control_pins()[j],
+                            state=self.__motor.get_half_step_sequence()[i][j],
+                        )
+                    sleep(0.001)
