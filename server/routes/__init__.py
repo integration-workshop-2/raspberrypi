@@ -1,0 +1,2 @@
+from .control_motor import control_motor_bp
+from .vital_signs_sensors import vital_signs_sensors_bp
