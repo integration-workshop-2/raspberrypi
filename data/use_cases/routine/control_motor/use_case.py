@@ -15,13 +15,12 @@ class ControlMotorUseCase:
         stop = False
 
         while not stop:
-            for _ in range(512):
-                for i in range(8):
-                    for j in range(4):
-                        self.__motor.set_pin_state(
-                            pin=self.__motor.get_control_pins()[j],
-                            state=self.__motor.get_half_step_sequence()[i][j],
-                        )
-                        if self.__tcrt5000a.detected or self.__tcrt5000b.detected:
-                            stop = True
-                    sleep(0.001)
+            for i in range(8):
+                for j in range(4):
+                    self.__motor.set_pin_state(
+                        pin=self.__motor.get_control_pins()[j],
+                        state=self.__motor.get_half_step_sequence()[i][j],
+                    )
+                    if self.__tcrt5000a.detected or self.__tcrt5000b.detected:
+                        stop = True
+                sleep(0.001)
