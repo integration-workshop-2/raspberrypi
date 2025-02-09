@@ -19,7 +19,7 @@ class HeartRateMonitor(object):
         self.print_raw = print_raw
         self.print_result = print_result
 
-    def run_sensor(self):
+    def get_readings(self):
         sensor = MAX30102()
         ir_data = []
         red_data = []
