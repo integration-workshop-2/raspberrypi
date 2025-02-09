@@ -12,6 +12,9 @@ class GetReadingsFromVitalSignsSensorsUseCase:
         temperature = self.__gy906.get_target_temperature()
         max30102_response = self.__max30102.get_bpm_and_oxygenation_percentage()
 
+        if not max30102_response.bpm or not max30102_response.oxygenation_percentage:
+            return {"success": False}
+
         return {
             "success": True,
             "data": {
