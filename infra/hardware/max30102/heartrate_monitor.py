@@ -8,19 +8,19 @@ class HeartRateMonitor(object):
         self.bpm = 0
         self.print_raw = print_raw
         self.print_result = print_result
+        self.sensor = MAX30102()
 
     def get_readings(self):
-        sensor = MAX30102()
         ir_data = []
         red_data = []
         bpms = []
 
         # check if any data is available
-        num_bytes = sensor.get_data_present()
+        num_bytes = self.sensor.get_data_present()
         if num_bytes > 0:
             # grab all the data and stash it into arrays
             while num_bytes > 0:
-                red, ir = sensor.read_fifo()
+                red, ir = self.sensor.read_fifo()
                 num_bytes -= 1
                 ir_data.append(ir)
                 red_data.append(red)
@@ -47,4 +47,4 @@ class HeartRateMonitor(object):
                     if self.print_result:
                         print("BPM: {0}, SpO2: {1}".format(self.bpm, spo2))
 
-        sensor.shutdown()
+        self.sensor.shutdown()
