@@ -1,27 +1,38 @@
 from .max30102 import MAX30102
 from .hrcalc import calc_hr_and_spo2
+import threading
+import time
 import numpy as np
 
 
 class HeartRateMonitor(object):
+    """
+    A class that encapsulates the max30102 device into a thread
+    """
+
+    LOOP_TIME = 0.01
+
     def __init__(self, print_raw=False, print_result=False):
         self.bpm = 0
+        if print_raw is True:
+            print("IR, Red")
         self.print_raw = print_raw
         self.print_result = print_result
-        self.sensor = MAX30102()
 
-    def get_readings(self):
+    def run_sensor(self):
+        sensor = MAX30102()
         ir_data = []
         red_data = []
         bpms = []
 
-        while True:
+        # run until told to stop
+        while not self._thread.stopped:
             # check if any data is available
-            num_bytes = self.sensor.get_data_present()
+            num_bytes = sensor.get_data_present()
             if num_bytes > 0:
                 # grab all the data and stash it into arrays
                 while num_bytes > 0:
-                    red, ir = self.sensor.read_fifo()
+                    red, ir = sensor.read_fifo()
                     num_bytes -= 1
                     ir_data.append(ir)
                     red_data.append(red)
@@ -48,4 +59,16 @@ class HeartRateMonitor(object):
                         if self.print_result:
                             print("BPM: {0}, SpO2: {1}".format(self.bpm, spo2))
 
-        self.sensor.shutdown()
+            time.sleep(self.LOOP_TIME)
+
+        sensor.shutdown()
+
+    def start_sensor(self):
+        self._thread = threading.Thread(target=self.run_sensor)
+        self._thread.stopped = False
+        self._thread.start()
+
+    def stop_sensor(self, timeout=2.0):
+        self._thread.stopped = True
+        self.bpm = 0
+        self._thread.join(timeout)
