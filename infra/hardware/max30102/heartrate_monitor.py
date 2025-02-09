@@ -52,6 +52,6 @@ class HeartRateMonitor(object):
                             if spo2 != -999:
                                 has_read = True
                                 return MAX30102Response(
-                                    bpm=round(self.bpm, 2),
+                                    bpm=round(float(self.bpm), 2),
                                     oxygenation_percentage=round(spo2, 2),
                                 )
