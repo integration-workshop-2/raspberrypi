@@ -17,10 +17,12 @@ class HeartRateMonitor(object):
         red_data = []
         bpms = []
 
-        has_read = False
+        i = 0
+        bpm_list = []
+        spo2_list = []
 
         # run until told to stop
-        while not has_read:
+        while i <= 4:
             # check if any data is available
             num_bytes = sensor.get_data_present()
             if num_bytes > 0:
@@ -50,8 +52,11 @@ class HeartRateMonitor(object):
                                 print("Finger not detected")
                         if self.print_result:
                             if spo2 != -999:
-                                has_read = True
-                                return MAX30102Response(
-                                    bpm=round(float(self.bpm), 2),
-                                    oxygenation_percentage=round(spo2, 2),
-                                )
+                                i += 1
+                                bpm_list.append(float(self.bpm))
+                                spo2_list.append(spo2)
+
+        return MAX30102Response(
+            bpm=round(sum(bpm_list) / len(bpm_list), 2),
+            oxygenation_percentage=round(sum(spo2_list) / len(spo2_list), 2),
+        )
