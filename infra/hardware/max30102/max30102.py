@@ -1,4 +1,3 @@
-from .hrcalc import calc_hr_and_spo2
 from .models.max30102_response import MAX30102Response
 from time import sleep
 import smbus
@@ -155,18 +154,3 @@ class MAX30102:
                 count -= 1
 
         return red_buf, ir_buf
-
-    # Update:
-    def get_bpm_and_oxygenation_percentage(self) -> MAX30102Response:
-        red, ir = self.read_sequential()
-
-        # Calculate heart rate and SpO2
-        hr, hr_valid, spo2, spo2_valid = calc_hr_and_spo2(ir, red)
-
-        # Check if valid readings are obtained
-        if hr_valid and spo2_valid:
-            return MAX30102Response(
-                bpm=round(hr, 2), oxygenation_percentage=round(spo2, 2)
-            )
-        else:
-            return MAX30102Response()
