@@ -18,11 +18,14 @@ class HeartRateMonitor(object):
         red_data = []
         bpms = []
 
+        has_read = False
+
         # run until told to stop
-        while True:
+        while not has_read:
             # check if any data is available
             num_bytes = sensor.get_data_present()
             if num_bytes > 0:
+                has_read = True
                 # grab all the data and stash it into arrays
                 while num_bytes > 0:
                     red, ir = sensor.read_fifo()
@@ -51,5 +54,3 @@ class HeartRateMonitor(object):
                                 print("Finger not detected")
                         if self.print_result:
                             print("BPM: {0}, SpO2: {1}".format(self.bpm, spo2))
-
-        sensor.shutdown()
